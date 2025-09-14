@@ -1,12 +1,14 @@
 import '../../App.css'
 import styles from './navbutton.module.css'
+import { motion } from "motion/react"
 
 function NavButton({ children }) {
 	return (
-		<button id={styles.navbutton} 
-		className='inverted border-radius-12px'>	
+		<motion.button id={styles.navbutton} 
+		className='inverted border-radius-12px'
+		whileHover={{scale: 1.06, backgroundColor: '#f76f53'}}>	
 			{children}
-		</button>
+		</motion.button>
 	);
 }
 
