@@ -1,4 +1,3 @@
-import '../../App.css'
 import styles from './navbutton.module.css'
 import { motion } from "motion/react"
 

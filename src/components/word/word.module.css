@@ -1,0 +1,15 @@
+.word {
+	margin: 8px 9px;
+}
+
+.typed {}
+
+.active {}
+
+.error {
+	border: 1px solid red;
+}
+
+.score {
+	border: 1px solid green;
+}
