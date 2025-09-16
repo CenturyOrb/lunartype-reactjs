@@ -1,15 +1,11 @@
 import styles from './word.module.css'
 import Letter from '../letter/Letter.js'
 
-function Word({ word, isFirstWord }) {
-	const classes = isFirstWord ? 
-					`${styles.word} ${styles.active} flex-row` : 
-					`${styles.word} flex-row`;
-	
+function Word({ props }) {
 	return (
-		<div id='word' className={classes}>
-			{word.map((letter, index) => (
-				<Letter key={index}>{letter}</Letter>
+		<div id='word' className={styles.word}>
+			{props.letters.map((letter, index) => (
+				<Letter key={index} props={letter}>{letter.character}</Letter>
 			))}
 		</div>
 	);

@@ -1,15 +1,9 @@
 .word {
 	margin: 8px 9px;
+	display: flex;
 }
 
-.typed {}
-
-.active {}
-
-.error {
-	border: 1px solid red;
-}
-
-.score {
-	border: 1px solid green;
+.word > * {
+	font-size: 2rem;	
+    line-height: 2rem;
 }
