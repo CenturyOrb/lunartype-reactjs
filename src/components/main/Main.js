@@ -3,65 +3,76 @@ import styles from './main.module.css'
 import { motion } from 'motion/react'
 import Word from '../word/Word.js'
 
-function Main() {
+function TypingInterface() {
 	const typingInterface = useRef(null);
 	const [words, setWords] = useState([]);
-	let timerRef = useRef(null);
-	let timerDoneRef = useRef(false);
+	const wordsRef = useRef(words);
+	const firstKey = useRef(true);
 
 	useEffect(() => {
+		wordsRef.current = words;
+	}, [words]);
+
+	// api call for words
+	useEffect(() => {
+		// fetch words and then the original on mount formatting
+		let timeout;
+		const fetchResults = fetchwords(); // api call
+		const formattedWords = formatResponse(fetchResults); // format api data 
+		setWords(formattedWords);
+
 		const handleKeyDown = (e) => {
-			if (!timerRef.current) {
-				// start here 
-				console.log('start timer');
-				timerRef.current = setTimeout(() => {
-					timeOut(); // re-renders
-				}, 3000);
-			}	
-			
-			const wordsCopy = structuredClone(words); // NOTE TO SELF: deep copy of nested object 
+			// check if first keypress after mount
+			if (firstKey.current) {
+				timeout = setTimeout(() => {
+					console.log('ends here');
+					// once done the compnent should be replaced with end screen 
+				}, 10000);	
+				firstKey.current = false;
+			}
+
+			const wordsCopy = structuredClone(wordsRef.current); // NOTE TO SELF: deep copy of nested object 
 			const currWordIndex = wordsCopy.findIndex(word => word.isActive);
 			const currWord = wordsCopy[currWordIndex];
-			const nextWord = wordsCopy[currWordIndex+1];
+			const nextWord = wordsCopy[currWordIndex + 1];
 
 			// the key is to always have the active letter in the right place
 			const currLetterIndex = currWord.letters.findIndex(letter => letter.isActive);
 			const currLetter = currWord.letters[currLetterIndex];
-			const nextLetter = currWord.letters[currLetterIndex+1] || nextWord.letters[0];
-			let prevLetter = currWord.letters[currLetterIndex-1];
+			const nextLetter = currWord.letters[currLetterIndex + 1] || nextWord.letters[0];
+			let prevLetter = currWord.letters[currLetterIndex - 1];
 
 			if (
-  				!/^[a-zA-Z0-9]$/.test(e.key) && 
-  				e.key !== ' ' &&                
-  				e.key !== 'Backspace'           
+				!/^[a-zA-Z0-9]$/.test(e.key) &&
+				e.key !== ' ' &&
+				e.key !== 'Backspace'
 			) return;
 			try {
 				if (e.key === 'Backspace' && !currLetter) { // back spacing on the last of the word
 					// undo correct/incorrect of "current" (previous) letter
 					prevLetter = currWord.letters.slice(-1)[0];
 					prevLetter.correct = 0;
-	                prevLetter.isActive = true;
+					prevLetter.isActive = true;
 					// switch active to letter prev letter
 				} else if (e.key === 'Backspace') {
-					console.log('Backspace');                           	
-                    // undo corrct/incorrect of previous letter
+					console.log('Backspace');
+					// undo corrct/incorrect of previous letter
 					if (prevLetter) {
-						currLetter.isActive = false; 
-						currWord.letters[currLetterIndex-1].correct = 0;
-						currWord.letters[currLetterIndex-1].isActive = true;
+						currLetter.isActive = false;
+						currWord.letters[currLetterIndex - 1].correct = 0;
+						currWord.letters[currLetterIndex - 1].isActive = true;
 					}
 				} else if (!currLetter && e.key !== ' ') { // extra typed 
 					// add a new letter with extra property
 					console.log('extra');
 					currWord.letters[currWord.letters.length] = {
 						character: e.key,
-                        isActive: false,
-                        correct: -1,
-                        isExtra: true
+						isActive: false,
+						correct: -1,
+						isExtra: true
 					}
-					
 				} else if (e.key === ' ') {	// space
-					console.log('space');	
+					console.log('space');
 					// move isActive word and letter
 					currWord.isActive = false;
 					nextWord.isActive = true;
@@ -80,58 +91,33 @@ function Main() {
 					currLetter.isActive = false;
 					nextLetter.isActive = true;
 				} else { console.log('this shouldnt be printing out') }
-			} catch (error) { 
-				console.log('ERROR HERE: BELOW');
-				console.error(error);
-				console.log(currWord);
-				console.log(nextWord);
-				console.log(currLetter);	
-				console.log(nextLetter);
-				console.log('ERROR ENDS');
-			}
+			} catch (error) { console.error(error) }
 
-			setWords(wordsCopy);		
+			setWords(wordsCopy);
 		}
 
-		const timeOut = () => {
-			console.log('timeout()');
-			// clear the test
-			timerDoneRef.current = true;
-		}
-		
+		// on mount add the event listener
 		window.addEventListener('keydown', handleKeyDown);
-        return () => { 
-			window.removeEventListener('keydown', handleKeyDown);
-			if (timerDoneRef.current) {
-				clearTimeout(timerRef.current);
-				timerDoneRef.current = false;
-				console.log('return');
-			}
-		}	
-	}, [words]);
-
-	// api call for words
-	useEffect(() => {
-		const fetchResults = fetchwords(); // api call
-		const formattedWords = formatResponse(fetchResults); // format api data 
-		setWords(formattedWords);
+		return () => { 
+			window.removeEventListener('keydown', handleKeyDown)
+			clearTimeout(timeout);
+			console.log('cleanup');
+		}
 	}, []);
 
 	return (
-		<main>
-			<motion.div ref={typingInterface} className={`${styles.type_interface} flex-row`}
+		<motion.div ref={typingInterface} className={`${styles.type_interface} flex-row`}
 			initial={{ opacity: 0, y: 25 }}
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 2 }}>
-				{words.map((word, index) => (
-					<Word key={index} props={word}/>
-				))}
-			</motion.div>
-		</main>
+			{words.map((word, index) => (
+				<Word key={index} props={word} />
+			))}
+		</motion.div>
 	);
 }
 
-function fetchwords() { 
+function fetchwords() {
 	const response = [
 		"cat", "blue", "grip", "stone", "jump",
 		"desk", "tree", "quiz", "lamp", "fast",
@@ -145,22 +131,22 @@ function fetchwords() {
 		"ring", "bark", "wolf", "beat", "milk"
 	];
 	return response;
-}	
+}
 
 function formatResponse(response) {
 	const wordsFormatted = response.map((word, wordIndex) => {
-	   	const lettersArr = word.split('')
-    		.map((letter, letterIndex) => {
-    			return {
-    				character: letter,
-    				isActive: !wordIndex && !letterIndex,
-    				correct: 0,
-    				isExtra: false
-    			}
-    		})
-    	return { letters: lettersArr, isActive: !wordIndex, isTyped: false }
-    })
-    return wordsFormatted;
+		const lettersArr = word.split('')
+			.map((letter, letterIndex) => {
+				return {
+					character: letter,
+					isActive: !wordIndex && !letterIndex,
+					correct: 0,
+					isExtra: false
+				}
+			})
+		return { letters: lettersArr, isActive: !wordIndex, isTyped: false }
+	})
+	return wordsFormatted;
 }
 
-export default Main;
+export default TypingInterface;

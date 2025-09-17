@@ -1,4 +1,4 @@
-import './header.module.css'
+import styles from './header.module.css'
 import NavButton from '../nav-button/NavButton.js'
 import { FaCog } from "react-icons/fa";
 import { motion } from "motion/react"
@@ -7,9 +7,9 @@ import { motion } from "motion/react"
 function Header() {
 
 	return(
-		<header> 
-			<div id='lunartype-logo' style={{color: 'var(--accent-color)'}}>lunartype</div>	
-			<nav>
+		<>
+			<div className={styles.lunartype_logo} style={{color: 'var(--accent-color)'}}>lunartype</div>	
+			<nav className={styles.lunartype_nav}>
 				<NavButton >Leadboard</NavButton>
 				<NavButton >History</NavButton>
 				<NavButton >Profile</NavButton>
@@ -19,7 +19,7 @@ function Header() {
 					<FaCog size={27} />
 				</motion.div>
 			</nav>
-		</header>
+		</>
 	);
 }
 

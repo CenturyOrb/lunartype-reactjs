@@ -21,3 +21,16 @@
 .padding-16px { padding: 16px; }
 
 .flex-row { display: flex; }
+
+header {
+	display: flex;
+	justify-content: space-between;
+}
+	
+main {
+	height: 81vh;	
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}

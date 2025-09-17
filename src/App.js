@@ -1,6 +1,7 @@
 import './App.css'
+import { useState } from 'react'
 import Header from './components/header/Header.js'
-import Main from './components/main/Main.js'
+import TypingInterface from './components/main/Main.js'
 
 function App() {
 	/* (1) header: 
@@ -11,10 +12,21 @@ function App() {
 	/* (3) footer: 
 		- credits
 		- versions */
+	const [renderTypeInterface, setRenderTypeInterface] = useState(true);
+
+	const handleClick = () => {
+		setRenderTypeInterface(!renderTypeInterface);	
+	}
+	
   	return (
   	  	<div id='big-boy'>
-			<Header />
-			<Main />
+			<header> 
+				<Header />	
+			</header>
+			<main>
+				{renderTypeInterface ? <TypingInterface /> : null}
+			</main>
+			<button onClick={handleClick}>hi</button>
   	  	</div>	
   	);
 }
