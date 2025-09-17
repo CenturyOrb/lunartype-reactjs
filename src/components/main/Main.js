@@ -3,7 +3,7 @@ import styles from './main.module.css'
 import { motion } from 'motion/react'
 import Word from '../word/Word.js'
 
-function TypingInterface() {
+function TypingInterface({ onTimeout }) {
 	const typingInterface = useRef(null);
 	const [words, setWords] = useState([]);
 	const wordsRef = useRef(words);
@@ -27,6 +27,7 @@ function TypingInterface() {
 				timeout = setTimeout(() => {
 					console.log('ends here');
 					// once done the compnent should be replaced with end screen 
+					onTimeout();
 				}, 10000);	
 				firstKey.current = false;
 			}

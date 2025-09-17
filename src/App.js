@@ -14,19 +14,17 @@ function App() {
 		- versions */
 	const [renderTypeInterface, setRenderTypeInterface] = useState(true);
 
-	const handleClick = () => {
-		setRenderTypeInterface(!renderTypeInterface);	
-	}
-	
   	return (
   	  	<div id='big-boy'>
 			<header> 
 				<Header />	
 			</header>
 			<main>
-				{renderTypeInterface ? <TypingInterface /> : null}
+				{renderTypeInterface ? <TypingInterface onTimeout={() => setRenderTypeInterface(false)}/> : null}
 			</main>
-			<button onClick={handleClick}>hi</button>
+			<footer> 
+				hihi foot
+			</footer>		
   	  	</div>	
   	);
 }
