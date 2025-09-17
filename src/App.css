@@ -2,6 +2,7 @@
 	--main-bg-color: rgb(242, 240, 227);
 	--main-color: rgb(46, 46, 46);
 	--accent-color: rgb(247, 111, 83);
+	--tertiary-color: rgb(211, 54, 130);
 }
 
 #big-boy {
@@ -33,4 +34,8 @@ main {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+main > * {
+	width: 100%;
 }

@@ -2,6 +2,7 @@ import './App.css'
 import { useState } from 'react'
 import Header from './components/header/Header.js'
 import TypingInterface from './components/main/Main.js'
+import ScoreScreen from './components/scorescreen/ScoreScreen.js'
 
 function App() {
 	/* (1) header: 
@@ -13,6 +14,7 @@ function App() {
 		- credits
 		- versions */
 	const [renderTypeInterface, setRenderTypeInterface] = useState(true);
+	const [wpm, setWpm] = useState(null);
 
   	return (
   	  	<div id='big-boy'>
@@ -20,7 +22,14 @@ function App() {
 				<Header />	
 			</header>
 			<main>
-				{renderTypeInterface ? <TypingInterface onTimeout={() => setRenderTypeInterface(false)}/> : null}
+				{renderTypeInterface ? 
+					<TypingInterface onTimeout={(wpm) => {
+						setRenderTypeInterface(false)
+						setWpm(wpm);	
+						}}/> : 	
+					null
+				}
+				{!renderTypeInterface ? <ScoreScreen score={wpm} username={'Crownless'}/> : null}
 			</main>
 			<footer> 
 				hihi foot

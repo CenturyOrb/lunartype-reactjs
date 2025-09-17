@@ -1,0 +1,24 @@
+.score_screen {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.username {
+	font-size: 4rem;	
+	color: var(--accent-color);
+}
+
+.type_info {
+	text-align: end;
+}
+
+.type_info > p:nth-of-type(1)  	{
+	color: var(--accent-color);
+	font-size: 2rem;
+}
+
+.type_info > p:nth-of-type(2) {
+	font-size: 4rem;
+	line-height: 3.5rem;
+}

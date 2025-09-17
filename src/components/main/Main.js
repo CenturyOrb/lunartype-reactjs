@@ -23,16 +23,18 @@ function TypingInterface({ onTimeout }) {
 
 		const handleKeyDown = (e) => {
 			// check if first keypress after mount
+			const wordsCopy = structuredClone(wordsRef.current); // NOTE TO SELF: deep copy of nested object 
+
 			if (firstKey.current) {
 				timeout = setTimeout(() => {
-					console.log('ends here');
+					// TODO: calculate wpm then send data out
 					// once done the compnent should be replaced with end screen 
-					onTimeout();
+					const wpm = wordsRef.current.filter(word => word.correct === true).length / 2;
+					onTimeout(parseFloat(wpm.toFixed(2)).toString());
 				}, 10000);	
 				firstKey.current = false;
 			}
 
-			const wordsCopy = structuredClone(wordsRef.current); // NOTE TO SELF: deep copy of nested object 
 			const currWordIndex = wordsCopy.findIndex(word => word.isActive);
 			const currWord = wordsCopy[currWordIndex];
 			const nextWord = wordsCopy[currWordIndex + 1];
@@ -56,7 +58,6 @@ function TypingInterface({ onTimeout }) {
 					prevLetter.isActive = true;
 					// switch active to letter prev letter
 				} else if (e.key === 'Backspace') {
-					console.log('Backspace');
 					// undo corrct/incorrect of previous letter
 					if (prevLetter) {
 						currLetter.isActive = false;
@@ -65,7 +66,6 @@ function TypingInterface({ onTimeout }) {
 					}
 				} else if (!currLetter && e.key !== ' ') { // extra typed 
 					// add a new letter with extra property
-					console.log('extra');
 					currWord.letters[currWord.letters.length] = {
 						character: e.key,
 						isActive: false,
@@ -73,21 +73,23 @@ function TypingInterface({ onTimeout }) {
 						isExtra: true
 					}
 				} else if (e.key === ' ') {	// space
-					console.log('space');
 					// move isActive word and letter
 					currWord.isActive = false;
 					nextWord.isActive = true;
 					nextWord.letters[0].isActive = true;
 					currWord.isTyped = true;
+					const invalid = currWord.letters.some(letter => {
+						return (letter.correct === 0 || letter.correct === -1 ||
+						letter.isExtra === true)
+					}); 
+					currWord.correct = invalid ? false : true; 
 				} else if (e.key === currLetter.character) { //correct
-					console.log('correct');
 					// currLetter should be correct then change the classes of the letter
 					// here should detect extra input if user doensnt space
 					currLetter.correct = 1;
 					currLetter.isActive = false;
 					nextLetter.isActive = true;
 				} else if (e.key !== currLetter.character) {
-					console.log('incorrect');
 					currLetter.correct = -1;
 					currLetter.isActive = false;
 					nextLetter.isActive = true;
@@ -102,7 +104,6 @@ function TypingInterface({ onTimeout }) {
 		return () => { 
 			window.removeEventListener('keydown', handleKeyDown)
 			clearTimeout(timeout);
-			console.log('cleanup');
 		}
 	}, []);
 
@@ -145,7 +146,7 @@ function formatResponse(response) {
 					isExtra: false
 				}
 			})
-		return { letters: lettersArr, isActive: !wordIndex, isTyped: false }
+		return { letters: lettersArr, isActive: !wordIndex, isTyped: false, correct: false }
 	})
 	return wordsFormatted;
 }
