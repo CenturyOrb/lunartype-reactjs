@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, createRef } from 'react'
 import styles from './main.module.css'
 import { motion } from 'motion/react'
 import Word from '../word/Word.js'
@@ -7,10 +7,16 @@ function TypingInterface({ onTimeout }) {
 	const typingInterface = useRef(null);
 	const [words, setWords] = useState([]);
 	const wordsRef = useRef(words);
+	const wordsElRef = useRef([]);
 	const firstKey = useRef(true);
+	const prevRow = useRef(-1);
+	const typeInterfaceRef = useRef(null);
 
 	useEffect(() => {
 		wordsRef.current = words;
+		if (firstKey.current) {
+			wordsElRef.current = words.map(() => createRef());
+		}
 	}, [words]);
 
 	// api call for words
@@ -25,13 +31,15 @@ function TypingInterface({ onTimeout }) {
 			// check if first keypress after mount
 			const wordsCopy = structuredClone(wordsRef.current); // NOTE TO SELF: deep copy of nested object 
 
+			// disable scorlling
+
 			if (firstKey.current) {
 				timeout = setTimeout(() => {
 					// TODO: calculate wpm then send data out
 					// once done the compnent should be replaced with end screen 
 					const wpm = wordsRef.current.filter(word => word.correct === true).length / 2;
 					onTimeout(parseFloat(wpm.toFixed(2)).toString());
-				}, 10000);	
+				}, 60000);	
 				firstKey.current = false;
 			}
 
@@ -73,6 +81,19 @@ function TypingInterface({ onTimeout }) {
 						isExtra: true
 					}
 				} else if (e.key === ' ') {	// space
+					// check if last word of a line, scroll 
+					const nextWordRect = wordsElRef.current[currWordIndex+1].current.getBoundingClientRect();
+					const currWordRect = wordsElRef.current[currWordIndex].current.getBoundingClientRect();
+					if (nextWordRect.top > currWordRect.top) { 
+						if (++prevRow.current >= 1) {
+							typeInterfaceRef.current.scrollTo({
+								top: prevRow.current * 48,
+								left: 0,
+								behavior: 'smooth'
+							});
+						}	
+					} 
+
 					// move isActive word and letter
 					currWord.isActive = false;
 					nextWord.isActive = true;
@@ -109,11 +130,14 @@ function TypingInterface({ onTimeout }) {
 
 	return (
 		<motion.div ref={typingInterface} className={`${styles.type_interface} flex-row`}
+			ref={typeInterfaceRef}
 			initial={{ opacity: 0, y: 25 }}
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 2 }}>
 			{words.map((word, index) => (
-				<Word key={index} props={word} />
+				<Word key={index} props={word} 	
+				ref={wordsElRef.current[index]}
+				/>
 			))}
 		</motion.div>
 	);

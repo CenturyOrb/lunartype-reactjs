@@ -1,6 +1,6 @@
 .type_interface {
 	height: 144px;
-	overflow: auto;
+	overflow: hidden;
 	flex-wrap: wrap;
 }
 
