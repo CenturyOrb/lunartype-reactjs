@@ -7,7 +7,7 @@
 
 #big-boy {
 	height: 100vh;
-	padding: 4vh 8.5vw;	
+	padding: 4vh 8.5vw;
 	background-color: var(--main-bg-color);
 	color: var(--main-color);
 }
@@ -17,25 +17,35 @@
 	color: var(--main-bg-color);
 }
 
-.border-radius-12px { border-radius: 12px; }
+.border-radius-12px {
+	border-radius: 12px;
+}
 
-.padding-16px { padding: 16px; }
+.border-radius-1rem {
+	border-radius: 1rem;
+}
 
-.flex-row { display: flex; }
+.padding-16px {
+	padding: 16px;
+}
+
+.flex-row {
+	display: flex;
+}
 
 header {
 	display: flex;
 	justify-content: space-between;
 }
-	
+
 main {
-	height: 81vh;	
+	height: 81vh;
 
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 
-main > * {
+main>* {
 	width: 100%;
 }

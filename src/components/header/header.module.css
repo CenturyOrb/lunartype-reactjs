@@ -5,5 +5,27 @@
 
 .lunartype_nav {
 	display: flex;
-	gap: 1.2rem;	
+	gap: 1.2rem;
+}
+
+.nav_button {
+	padding: 12px 20px;
+}
+
+.login {
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+	font-size: 1.1rem;
+}
+
+.input_wrapper {
+	border: 2px solid var(--accent-color);
+	border-radius: 0.5rem;
+	width: fit-content;
+	padding: 0.1rem;
+}
+
+.input_wrapper>input {
+	border-radius: 0.5rem;
 }
