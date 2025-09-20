@@ -8,6 +8,10 @@ import { motion } from "motion/react"
 function Header() {
 	const [modalOn, setModalOn] = useState(false);
 
+	const signIn = () => {
+		console.log('Ill get it done tmw with the database done sunday. Im tired');
+}
+
 	return (
 		<>
 			<div className={styles.lunartype_logo} style={{ color: 'var(--accent-color)' }}>lunartype</div>
@@ -33,7 +37,6 @@ function Header() {
 					whileHover={{ scale: 1.06, color: '#f76f53' }}>
 					<FaCog size={27} />
 				</motion.div>
-
 				<ProfileModal isOpen={modalOn} onClose={() => setModalOn(false)}>
 					<div className={styles.login}>
 						<label for='email-email'>Email</label>
@@ -44,7 +47,7 @@ function Header() {
 						<div className={styles.input_wrapper}>
 							<input id='email-password' type='password' placeholder='Password...' />
 						</div>
-						<button>Sign In</button>
+						<button onClick={signIn}>Sign In</button>
 					</div>
 				</ProfileModal>
 			</nav>
