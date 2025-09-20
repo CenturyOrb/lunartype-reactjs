@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, createRef } from 'react'
+import { useEffect, useRef, useState, createRef, useContext } from 'react'
+import { UserContext } from '../../App.js'
 import styles from './main.module.css'
 import { motion } from 'motion/react'
 import Word from '../word/Word.js'
@@ -11,6 +12,7 @@ function TypingInterface({ onTimeout }) {
 	const firstKey = useRef(true);
 	const prevRow = useRef(-1);
 	const typeInterfaceRef = useRef(null);
+	const {lunartypeUser, setLunartypeUser} = useContext(UserContext);
 
 	useEffect(() => {
 		wordsRef.current = words;

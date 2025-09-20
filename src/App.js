@@ -1,8 +1,10 @@
 import './App.css'
-import { useState } from 'react'
+import { useState, createContext } from 'react'
 import Header from './components/header/Header.js'
 import TypingInterface from './components/main/Main.js'
 import ScoreScreen from './components/scorescreen/ScoreScreen.js'
+
+export const UserContext = createContext();
 
 function App() {
 	/* (1) header: 
@@ -15,9 +17,11 @@ function App() {
 		- versions */
 	const [renderTypeInterface, setRenderTypeInterface] = useState(true);
 	const [wpm, setWpm] = useState(null);
+	const [lunartypeUser, setLunartypeUser] = useState(null);
 
   	return (
   	  	<div id='big-boy'>
+			<UserContext.Provider value={{ lunartypeUser, setLunartypeUser}}>
 			<header> 
 				<Header />	
 			</header>
@@ -31,6 +35,7 @@ function App() {
 				}
 				{!renderTypeInterface ? <ScoreScreen score={wpm} username={'Crownless'}/> : null}
 			</main>
+			</UserContext.Provider>
 			<footer> 
 				hihi foot
 			</footer>		

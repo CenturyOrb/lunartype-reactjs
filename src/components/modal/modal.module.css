@@ -13,11 +13,10 @@
 }
 
 .modal_content {
-	height: 75vh;
 	width: 25vw;
 	background-color: var(--main-bg-color);
 	position: relative;
-	padding: 1rem;
+	padding: 5rem 5rem;
 
 	display: flex;
 	justify-content: center;
