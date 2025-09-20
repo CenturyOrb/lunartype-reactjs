@@ -41,6 +41,7 @@ function TypingInterface({ onTimeout }) {
 					// once done the compnent should be replaced with end screen 
 					const wpm = wordsRef.current.filter(word => word.correct === true).length / 2;
 					onTimeout(parseFloat(wpm.toFixed(2)).toString());
+					// save wpm to firestore
 				}, 60000);	
 				firstKey.current = false;
 			}

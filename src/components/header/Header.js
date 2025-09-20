@@ -11,7 +11,7 @@ import { GoogleAuthProvider,
 		signInWithEmailAndPassword,
 		signOut,	
 		onAuthStateChanged } from 'firebase/auth'
-import { collection, addDoc } from 'firebase/firestore'
+import { doc, setDoc } from 'firebase/firestore'
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -31,13 +31,13 @@ function Header() {
 	}, []);
 	
 	useEffect(() => {
-		console.log(lunartypeUser);
 		setModalOn(false);
 	}, [lunartypeUser]);
 
 	const handleGoogleLogin = async () => {
 		try {
 			const userCredential = await signInWithPopup(FirebaeAuth, googleProvider);
+			await addNewUser(userCredential.user.email, userCredential.user.uid);
     	} catch (error) { console.error(error) }
 	}
 
@@ -45,9 +45,8 @@ function Header() {
 		try {
 			const userCredential = await createUserWithEmailAndPassword(FirebaeAuth, emailInput, passwordInput);
 			// add user to database /users/{ uid }	
-			const docRef = await addDoc(collection(db, "users"), {
-				
-  			});
+			// in the future add their name too
+			await addNewUser(userCredential.user.email, userCredential.user.uid);
 		} catch (error) { console.error(error) }
 		finally {
 			setEmailInput('');
@@ -132,6 +131,14 @@ function Header() {
 			</nav>
 		</>
 	);
+}
+
+async function addNewUser(userEmail, userUID) { 
+	try {
+		const newUser = doc(FirebaeDB, `users/${userEmail}`);
+    	const userDocData = { uid: userUID };
+    	await setDoc(newUser, userDocData);
+	} catch (error) { console.error(error) }
 }
 
 export default Header
